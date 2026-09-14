@@ -1,18 +1,28 @@
 import argparse
 import socket
 import sys
+import threading
 
 from consts import ENCODING
 
 
+def connection_handler(conn: socket):
+    print(conn.recv(1024)[:-4].decode(ENCODING))
+
+
 def run_server(ip: str, port: int) -> None:
+    """
+    Run a server on <ip>:<port>
+    Every connection accepted gets its own thread for handling.
+    """
     while True:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind((ip, port))
             s.listen()
             conn, _ = s.accept()
             with conn:
-                print(conn.recv(1024)[:-4].decode(ENCODING))
+                thread = threading.Thread(target=connection_handler, args=(conn,))
+                thread.start()
 
 
 def get_args():
