@@ -1,5 +1,6 @@
 import argparse
 import sys
+import socket
 
 
 ###########################################################
@@ -11,6 +12,10 @@ def send_data(server_ip, server_port, data):
     '''
     Send data to server in address (server_ip, servr_port).
     '''
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((server_ip, server_port))
+        s.sendall(b'Hello World')
+
 
 
 
