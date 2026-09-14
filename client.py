@@ -9,7 +9,7 @@ from consts import ENCODING
 ###########################################################
 
 
-def send_data(server_ip, server_port, data):
+def send_data(server_ip: str, server_port: int, data: str) -> None:
     """
     Send data to server in address (server_ip, servr_port).
     """

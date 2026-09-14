@@ -5,7 +5,7 @@ import sys
 from consts import ENCODING
 
 
-def run_server(ip, port):
+def run_server(ip: str, port: int) -> None:
     while True:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind((ip, port))
