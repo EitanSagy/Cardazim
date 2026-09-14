@@ -1,3 +1,3 @@
 # Cardazim
 
-This is my Cardaim Project
+This is my Cardazim Project
