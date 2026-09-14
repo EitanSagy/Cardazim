@@ -1,7 +1,8 @@
 import argparse
-import sys
 import socket
+import sys
 
+from consts import ENCODING
 
 ###########################################################
 ####################### YOUR CODE #########################
@@ -9,14 +10,15 @@ import socket
 
 
 def send_data(server_ip, server_port, data):
-    '''
+    """
     Send data to server in address (server_ip, servr_port).
-    '''
+    """
+    size_bytes = len(data).to_bytes(4, "little")
+    to_send = bytes(data, ENCODING) + size_bytes
+
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((server_ip, server_port))
-        s.sendall(b'Hello World')
-
-
+        s.sendall(to_send)
 
 
 ###########################################################
@@ -25,25 +27,25 @@ def send_data(server_ip, server_port, data):
 
 
 def get_args():
-    parser = argparse.ArgumentParser(description='Send data to server.')
-    parser.add_argument('server_ip', type=str, help='the servers ip')
-    parser.add_argument('server_port', type=int, help='the servers port')
-    parser.add_argument('data', type=str, help='the data')
+    parser = argparse.ArgumentParser(description="Send data to server.")
+    parser.add_argument("server_ip", type=str, help="the servers ip")
+    parser.add_argument("server_port", type=int, help="the servers port")
+    parser.add_argument("data", type=str, help="the data")
     return parser.parse_args()
 
 
 def main():
-    '''
+    """
     Implementation of CLI and sending data to server.
-    '''
+    """
     args = get_args()
     try:
         send_data(args.server_ip, args.server_port, args.data)
-        print('Done.')
+        print("Done.")
     except Exception as error:
-        print(f'ERROR: {error}')
+        print(f"ERROR: {error}")
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())
