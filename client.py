@@ -1,6 +1,7 @@
 import argparse
 import socket
 import sys
+import connection
 
 from consts import ENCODING
 
@@ -13,12 +14,8 @@ def send_data(server_ip: str, server_port: int, data: str) -> None:
     """
     Send data to server in address (server_ip, servr_port).
     """
-    size_bytes = len(data).to_bytes(4, "little")
-    to_send = bytes(data, ENCODING) + size_bytes
-
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((server_ip, server_port))
-        s.sendall(to_send)
+    conn = connection.Connection.connect(server_ip, server_port)
+    conn.send_message(bytes(data, ENCODING))
 
 
 ###########################################################
