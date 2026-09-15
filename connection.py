@@ -1,9 +1,7 @@
 import socket
-import struct
-from threading import Thread
 
 
-class Connection(Thread):
+class Connection:
     def __init__(self, connection: socket.socket):
         self.conn = connection
 
