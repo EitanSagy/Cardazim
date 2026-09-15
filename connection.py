@@ -1,4 +1,5 @@
 import socket
+import struct
 from threading import Thread
 
 
@@ -10,13 +11,17 @@ class Connection(Thread):
         return self.conn.__repr__()
 
     def send_message(self, message: bytes):
-        size_bytes = len(message).to_bytes(4, "little")
-        to_send = message + size_bytes
+        size_bytes = len(message).to_bytes(8, "little")
+        to_send = size_bytes + message
 
         self.conn.sendall(to_send)
 
     def receive_message(self) -> bytes:
-        return self.conn.recv(1024)[:-4]  # remove the size argument
+        b = self.conn.recv(4)
+        print(b)
+        message_size = int.from_bytes(b, "little")
+        print(message_size)
+        return self.conn.recv(message_size + 4)[4:]
 
     def close(self):
         self.conn.__exit__()
