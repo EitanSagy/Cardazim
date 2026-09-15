@@ -1,9 +1,13 @@
 import argparse
-import socket
 import sys
+from threading import Thread
 
-from consts import ENCODING
+from connection import Connection
 from listener import Listener
+
+
+def handle_connection(conn: Connection):
+    print(conn.receive_message())
 
 
 def run_server(ip: str, port: int) -> None:
@@ -11,11 +15,9 @@ def run_server(ip: str, port: int) -> None:
     Run a server on <ip>:<port>
     Every connection accepted gets its own thread for handling.
     """
-    connections = []
     with Listener.listen(ip, port) as listener:
         while True:
-            connections.append(listener.accept())
-            print(connections[-1].receive_message())
+            Thread(listener.accept())
 
 
 def get_args():
