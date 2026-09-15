@@ -9,7 +9,7 @@ class Connection:
         return self.conn.__repr__()
 
     def send_message(self, message: bytes):
-        size_bytes = len(message).to_bytes(8, "little")
+        size_bytes = len(message).to_bytes(4, "little")
         to_send = size_bytes + message
 
         self.conn.sendall(to_send)
@@ -17,7 +17,7 @@ class Connection:
     def receive_message(self) -> bytes:
         b = self.conn.recv(4)
         message_size = int.from_bytes(b, "little")
-        return self.conn.recv(message_size + 4)[4:]
+        return self.conn.recv(message_size)
 
     def close(self):
         self.conn.__exit__()
