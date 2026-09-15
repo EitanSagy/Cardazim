@@ -16,9 +16,7 @@ class Connection:
 
     def receive_message(self) -> bytes:
         b = self.conn.recv(4)
-        print(b)
         message_size = int.from_bytes(b, "little")
-        print(message_size)
         return self.conn.recv(message_size + 4)[4:]
 
     def close(self):
