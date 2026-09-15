@@ -25,6 +25,9 @@ class Card:
     def __str__(self):
         return f"Card {self.name} by {self.creator}\nriddle: {self.riddle}\nsolution: {self.solution if self.solution is not None else 'unsolved'}"
 
+    def encrypt(self):
+        self.image.encrypt(self.solution)
+
     @classmethod
     def create_from_path(
         cls, name: str, creator: str, path: str | PathLike, riddle: str, solution: str
