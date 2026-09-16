@@ -27,10 +27,11 @@ class Card:
 
     def encrypt(self):
         self.image.encrypt(self.solution)
+        return self
 
     @classmethod
     def create_from_path(
-        cls, name: str, creator: str, path: str | PathLike, riddle: str, solution: str
+        cls, name: str, creator: str, riddle: str, solution: str, path: str | PathLike
     ):
         return Card(name, creator, CryptImage.create_from_path(path), riddle, solution)
 
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     solution = "this is the solution"
     path = "secret.jpg"
 
-    card = Card.create_from_path(name, creator, path, riddle, solution)
+    card = Card.create_from_path(name, creator, riddle, solution, path)
     card.image.encrypt(card.solution)
     data = card.serialize()
 
@@ -107,4 +108,4 @@ if __name__ == "__main__":
     if card2.image.decrypt(solution):
         card2.solution = solution
     assert repr(card) == repr(card2)
-    card2.image.image.show()
+    card2.image.image.save("copy.jpg")
