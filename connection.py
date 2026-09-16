@@ -15,9 +15,13 @@ class Connection:
         self.conn.sendall(to_send)
 
     def receive_message(self) -> bytes:
-        b = self.conn.recv(4)
-        message_size = int.from_bytes(b, "little")
-        return self.conn.recv(message_size)
+        message_size = int.from_bytes(self.conn.recv(4), "little")
+
+        arr = bytearray()
+        while len(arr) < message_size:
+            arr.extend(self.conn.recv(message_size - len(arr)))
+
+        return bytes(arr)
 
     def close(self):
         self.conn.__exit__()
