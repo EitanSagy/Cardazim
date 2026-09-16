@@ -6,20 +6,22 @@ class Connection:
         self.conn = connection
 
     def __repr__(self):
-        return self.conn.__repr__()
+        return f"Connection(ip={self.conn.getpeername()[0]},port={self.conn.getpeername()[1]})"
 
     def send_message(self, message: bytes):
-        size_bytes = len(message).to_bytes(8, "little")
+        size_bytes = len(message).to_bytes(4, "little")
         to_send = size_bytes + message
 
         self.conn.sendall(to_send)
 
     def receive_message(self) -> bytes:
-        b = self.conn.recv(4)
-        print(b)
-        message_size = int.from_bytes(b, "little")
-        print(message_size)
-        return self.conn.recv(message_size + 4)[4:]
+        message_size = int.from_bytes(self.conn.recv(4), "little")
+
+        arr = bytearray()
+        while len(arr) < message_size:
+            arr.extend(self.conn.recv(message_size - len(arr)))
+
+        return bytes(arr)
 
     def close(self):
         self.conn.__exit__()
