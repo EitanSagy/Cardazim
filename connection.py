@@ -6,7 +6,7 @@ class Connection:
         self.conn = connection
 
     def __repr__(self):
-        return self.conn.__repr__()
+        return f"Connection(ip={self.conn.getpeername()[0]},port={self.conn.getpeername()[1]})"
 
     def send_message(self, message: bytes):
         size_bytes = len(message).to_bytes(4, "little")
