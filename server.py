@@ -5,9 +5,12 @@ from threading import Thread
 from connection import Connection
 from listener import Listener
 
+from card import Card
+
 
 def handle_connection(conn: Connection):
-    print(conn.receive_message())
+    msg = conn.receive_message()
+    print(Card.deserialize(msg))
 
 
 def run_server(ip: str, port: int) -> None:
@@ -17,7 +20,10 @@ def run_server(ip: str, port: int) -> None:
     """
     with Listener.listen(ip, port) as listener:
         while True:
-            Thread(listener.accept())
+            with listener.accept() as conn:
+                t = Thread(target=handle_connection, args=(conn,))
+                t.start()
+                t.join()
 
 
 def get_args():
